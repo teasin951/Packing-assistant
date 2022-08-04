@@ -1,0 +1,30 @@
+{
+    "Hotel": {
+        "T-shirt": 0.8,
+        "Jeans": "1",
+        "Shorts": 0.4,
+        "Underwear": 1,
+        "Socks": 1,
+        "Shoes": "",
+        "Toothbrush": "",
+        "Toothpaste": ""
+    },
+    "Camping": {
+        "T-shirt": 0.95,
+        "Trousers": 0.1,
+        "Shorst": 0.4,
+        "Underwear": 1,
+        "Socks": 1,
+        "Shoes": "",
+        "Toothbrush": "",
+        "Toothpaste": "",
+        "Water bottle": "1",
+        "Raincoat": "1",
+        "Showering gel": "1"
+    },
+    "Persistant": {
+        "Charger": "",
+        "Meds": 1,
+        "Wallet": ""
+    }
+}
