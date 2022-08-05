@@ -1,15 +1,15 @@
-""" 
+"""
 
     This is a simple terminal program that will help you pack things for your trips.
 
     You can edit presets in config.json, just stick with the syntax.
 
-    Add things you need on every trip into the "Persistant" category (things from this 
+    Add things you need on every trip into the "Persistent" category (things from this
     category will be added to your packing list regardless of the preset).
 
     Items defined with a multiplier: "Socks": 1.2, will get the amount assigned as = multiplier * # of days
     Items defined with a string number: "Jeans": "1", are independent of days
-    Items defined with a empty string: Backpack: "", are basically only notes and do not have any amount
+    Items defined with an empty string: Backpack: "", are basically only notes and do not have any amount
 
 """
 
@@ -19,16 +19,16 @@ import time
 import os
 
 
-def clearConsole():  # To simplify clearing console
+def clear_console():  # To simplify clearing console
     return os.system('cls' if os.name in ('nt', 'dos') else 'clear')
 
 
-def get_list(list):
+def get_list(the_list):
     while True:
         chosen_preset = input("\n")
 
         try:
-            return list[chosen_preset]
+            return the_list[chosen_preset]
 
         except KeyError:
             print('\n"{}" does not exist, try again: '.format(chosen_preset))
@@ -36,40 +36,40 @@ def get_list(list):
 
 def get_number(fraze, cancel=False):  # Tries to get a number
     while True:
-        try:
-            respond = input(fraze)
-            if cancel and respond == 'C':
-                return "\/NaN\/"
+        respond = input(fraze)
 
+        if cancel and respond == 'C':
+            return "NaN"
+
+        try:
             return int(respond)
         except ValueError:
             print('\n"{}" is not a valid number, try again: '.format(respond))
 
 
-def get_item(fraze, list, cancel=False):  # Tries to get a item
+def get_item(fraze, the_list, cancel=False):  # Tries to get an item
     while True:
-        try:
-            respond = input(fraze)
-            if cancel and respond == 'C':
-                return "\/NaN\/"
+        respond = input(fraze)
 
-            list[respond]
+        if cancel and respond == 'C':
+            return "NaN"
+
+        if respond in the_list:
             return respond
-        
-        except KeyError:
+        else:
             print('\n"{}" is not valid, try again: '.format(respond))
             
 
-def display_content(list):  # Displays content from a list
-    for content in list.keys():
-        if type(list[content]) is float or type(list[content]) is int:
-            print("{}x {}".format(list[content], content))
+def display_content(the_list):  # Displays content from a list
+    for content in the_list.keys():
+        if type(the_list[content]) is float or type(the_list[content]) is int:
+            print("{}x {}".format(the_list[content], content))
 
-        elif type(list[content]) is str:
-            if list[content] == '':
+        elif type(the_list[content]) is str:
+            if the_list[content] == '':
                 print("-  {}".format(content))
             else:
-                print("{}  {}".format(list[content], content))
+                print("{}  {}".format(the_list[content], content))
 
     print("\n") 
 
@@ -94,7 +94,7 @@ def enumerate_items():  # Calculates the amounts according to config.json
 def increase_item_amount():
     global ITP
     item = get_item("What item do you need more of? ('C' to cancel) ", ITP, cancel=True)
-    if item == "\/NaN\/":
+    if item == "NaN":
         return
 
     if type(ITP[item]) is str:  # Check if this item can be increased in amount
@@ -103,7 +103,11 @@ def increase_item_amount():
         return
 
     amount = get_number("How much more? ", cancel=True)
-    if amount == "\/NaN\/":
+    if amount == "NaN":
+        return
+
+    if ITP[item] + int(amount) < 1:
+        ITP.pop(item)
         return
 
     ITP[item] += int(amount)
@@ -112,7 +116,7 @@ def increase_item_amount():
 def decrease_item_amount():
     global ITP
     item = get_item("What item do you need less of? ('C' to cancel) ", ITP, cancel=True)
-    if item == "\/NaN\/":
+    if item == "NaN":
         return
 
     if type(ITP[item]) is str:
@@ -121,7 +125,7 @@ def decrease_item_amount():
         return
 
     amount = get_number("How much less? ", cancel=True)
-    if amount == "\/NaN\/":
+    if amount == "NaN":
         return
 
     if ITP[item] - int(amount) < 1:
@@ -131,21 +135,22 @@ def decrease_item_amount():
     ITP[item] -= int(amount)
 
 
-def delete_item(list):
+def delete_item(the_list):
     item = get_item("What item do you want to remove? ('C' to cancel) ", ITP, cancel=True)
-    if item == "\/NaN\/":
+    if item == "NaN":
         return
 
-    list.pop(item)
+    the_list.pop(item)
     
 
 def add_item():
     global ITP
     while True:
-        clearConsole()
+        clear_console()
         print("\nIs this what you need?:")
         display_content(ITP)
-        item = input("Add any item to the list by typing its name.\nType '+' to increase the amount of an item or '-' to decrease it.\nType '/' to delete an item.\n\n(press enter to continue) ")
+        item = input("Add or edit any item on the list by typing its name.\nType '+' to increase the amount of an "
+                     "item or '-' to decrease it.\nType '/' to delete an item.\n\n(press enter to confirm) ")
 
         if item == "":
             break
@@ -164,8 +169,9 @@ def add_item():
                 number = input("How many? ('-' for no amount, 'C' to cancel) ")
                 if number == '-':
                     ITP = ITP | {item: ''}
+                    break
                 elif number == 'C':
-                    pass
+                    break
                 else:
                     try:
                         ITP = ITP | {item: int(number)}
@@ -174,25 +180,21 @@ def add_item():
                         print('"{}" is invalid, try again.\n'.format(number))
 
 
-def pack_item(item):
-    API[item] = ITP.pop(item)
-
-
 with open("config.json", "r", encoding='utf-8') as file:
     jFile = json.load(file)
 
 
 # """ Pick a preset and # of days """ #
-clearConsole()
-print("Hi, let's start packing!\n")
+clear_console()
+print("\nHi, let's start packing!\n")
 print("Choose a preset to use: ")
 
 for presets in jFile.keys():
-    if presets != "Persistant":
+    if presets != "Persistent":
         print(presets)
 
 
-ITP = get_list(jFile) | jFile["Persistant"]  # Items To Pack
+ITP = get_list(jFile) | jFile["Persistent"]  # Items To Pack
 days = get_number("How many days do you plan to travel? ")
 enumerate_items()
 
@@ -204,19 +206,20 @@ add_item()
 # """ Packing assistant """
 API = {}  # Already Packed Items
 while len(ITP) != 0:
-    clearConsole()
-    print("\nNow get to packing!\nType the items you packed into the terminal to cross them off.\n\nNeed to pack:")
+    clear_console()
+    print("\nNow get to packing!\nType the items you packed into console to cross them off.\n\nNeed to pack:")
     display_content(ITP)
     print("\nAlready packed:")
     display_content(API)
 
-    try:
-        pack_item(input(""))
-    except KeyError:
+    usr_input = input("")
+    if usr_input in ITP:
+        API[usr_input] = ITP.pop(usr_input)
+    else:
         print("This was not on your list!")
         time.sleep(0.75)
 
-clearConsole()
+clear_console()
 print("\nYou have everything you need!")
 display_content(API)
-print("Have a save trip!")
+print("Have a good one!")
