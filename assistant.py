@@ -145,7 +145,7 @@ def add_item():
         clearConsole()
         print("\nIs this what you need?:")
         display_content(ITP)
-        item = input("Add any item to the list by typing its name.\nType '+' to increase the amount of a item or '-' to decrease it.\nType '/' to delete an item.\n\n(press enter to continue) ")
+        item = input("Add any item to the list by typing its name.\nType '+' to increase the amount of an item or '-' to decrease it.\nType '/' to delete an item.\n\n(press enter to continue) ")
 
         if item == "":
             break
@@ -193,7 +193,7 @@ for presets in jFile.keys():
 
 
 ITP = get_list(jFile) | jFile["Persistant"]  # Items To Pack
-days = get_number("How many day do you plan to travel? ")
+days = get_number("How many days do you plan to travel? ")
 enumerate_items()
 
 
@@ -205,7 +205,7 @@ add_item()
 API = {}  # Already Packed Items
 while len(ITP) != 0:
     clearConsole()
-    print("\nNow get to packing!\nType the items you packed into console to cross them off.\n\nNeed to pack:")
+    print("\nNow get to packing!\nType the items you packed into the terminal to cross them off.\n\nNeed to pack:")
     display_content(ITP)
     print("\nAlready packed:")
     display_content(API)
