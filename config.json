@@ -1,30 +1,22 @@
 {
-    "Hotel": {
-        "T-shirt": 0.8,
-        "Jeans": "1",
-        "Shorts": 0.4,
-        "Underwear": 1,
-        "Socks": 1,
-        "Shoes": "",
-        "Toothbrush": "",
-        "Toothpaste": ""
+    "Example": {
+        "Traveltime dependent": 0.8,
+        "Fixed value": "4",
+        "Note": ""
     },
-    "Camping": {
+    "Example-Camping": {
         "T-shirt": 0.95,
-        "Trousers": 0.1,
         "Shorst": 0.4,
         "Underwear": 1,
         "Socks": 1,
-        "Shoes": "",
-        "Toothbrush": "",
-        "Toothpaste": "",
         "Water bottle": "1",
-        "Raincoat": "1",
-        "Showering gel": "1"
+        "Tent": "1",
+        "Showering gel": "1",
+        "Call dad": ""
     },
-    "Persistant": {
-        "Charger": "",
-        "Meds": 1,
-        "Wallet": ""
+    "Persistent": {
+        "This will be": 1,
+        "appended to": "2",
+        "all presets.": ""
     }
 }
